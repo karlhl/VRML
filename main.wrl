@@ -1,0 +1,200 @@
+#VRML V2.0 utf8
+
+
+#VRML V2.0 utf8
+
+#16010520041 韩 璐 
+
+Viewpoint {
+	position 0.0 0.6 8.0
+	orientation	1.0 0.0 0.0 0.1
+}
+
+NavigationInfo {
+	type ["WALK","ANY"]
+	headlight FALSE
+	speed 2.0
+}
+
+DirectionalLight {
+	ambientIntensity	0.5
+	direction 0.0 -1.0 -0.5
+}
+
+#sky
+Background {
+	skyColor [
+		0.0 0.0 1.0,
+        0.0 0.5 1.0,
+        0.7 0.7 1.0,
+    ]
+    skyAngle [
+        1.371,
+        1.571,
+    ]
+}
+
+#beach
+
+ Shape {
+    appearance Appearance {
+        material Material { }
+        texture ImageTexture { url "sand.jpg" }
+        textureTransform TextureTransform { scale 10.0 10.0 }
+    }
+    geometry IndexedFaceSet {
+        coord Coordinate {
+            point [
+                -50.0 -1.0  50.0,
+                 50.0 -1.0  50.0,
+                 50.0 -1.0 -50.0,
+                -50.0 -1.0 -50.0,
+            ]
+        }
+        coordIndex [ 0, 1, 2, 3 ]
+        solid FALSE
+    }
+}
+
+
+DEF rocket Transform {
+	translation -0.2 0 0
+	children	[
+		DEF	body Transform{   #圆柱加圆锥
+			translation	0 4 0
+			rotation 0 0 1 0
+			scale 1 1 1
+			children [
+				DEF	body2 Transform	{ #圆柱
+					translation	0 -1.2 0
+					rotation 1 0 0 0
+					scale 1 1 1
+					children [
+						Shape {
+							appearance Appearance {
+								material Material {}
+								texture	ImageTexture {url "body.png"}
+							}
+							geometry Cylinder {
+								height 6
+								radius 0.6	
+								bottom TRUE
+								top	FALSE
+							}
+						}	
+					]
+				}
+				DEF head Transform{ #圆锥
+					translation 0 2.8 0
+					rotation 0 0 0 0
+					scale 1 1 1
+					children[
+						Shape{
+							appearance Appearance{
+								material Material {diffuseColor 1 1 1}
+							}
+							geometry Cone{
+								bottomRadius 0.6
+								height 2
+								bottom TRUE
+								side TRUE
+							}
+						}
+					] 
+ 				}
+			]
+		}
+		Transform {
+			translation 0.7 0.0 0.0
+			scale 0.2 0.2 0.2
+			children[USE body]
+		}
+		Transform {
+			translation -0.7 0.0 0.0
+			scale 0.2 0.2 0.2
+			children[USE body]
+		}
+		Transform {
+			translation 0.0 0.0 0.7
+			scale 0.2 0.2 0.2
+			children[USE body]
+		}
+		Transform {
+			translation 0.0 0.0 -0.7
+			scale 0.2 0.2 0.2
+			children[USE body]
+		}
+		
+
+	]
+}
+
+
+#发射按钮
+
+Transform {
+	translation 5.0 0.0 0.0
+			children[
+			Shape {
+				appearance Appearance{
+				material Material{diffuseColor 0.333 0.333 0.0}
+				}
+				geometry Box{
+				size 3.0 3.0 0.5
+				}
+			}
+			Transform{
+				translation 0.0 0.0 0.0
+				rotation 1.0 0.0 0.0 1.6
+				children[
+					Shape{
+						appearance Appearance{
+						material Material{diffuseColor 1 1 0.33}
+						}
+					
+						geometry Cylinder{
+							height 1.0
+							radius 0.5
+							top TRUE
+							side TRUE
+							}
+						}
+						DEF	C4 TouchSensor {}
+						Sound {
+							source DEF PitchC4 AudioClip {
+								url "sound.wav"
+								pitch 1.0
+							}
+							maxFront 100.0
+							maxBack	100.0
+						}
+				]
+			}
+			
+	]
+}
+ROUTE C4.touchTime TO PitchC4.set_startTime
+
+#文字
+Transform{
+	translation 3.0 5.0 0.0
+	children[
+		Shape{
+		appearance Appearance{
+			material Material{}
+		}
+		geometry Text{
+			string "press the button and set the rocket"
+			fontStyle FontStyle	{
+				size 1
+				family "SERIF"
+				style "PLAIN"
+				horizontal TRUE
+				justify	["BEGIN","FIRST"]
+			
+			}
+		}
+	}	
+	]
+}
+
